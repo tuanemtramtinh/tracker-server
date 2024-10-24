@@ -22,5 +22,5 @@ block main
               td(class="p-[15px] border")
                 a(href=file.link class="hover:text-[#4BA3E3]" download=file.fileName) Download
               td(class="p-[15px] border") #{file.createdAt}
-              td(class="p-[15px] border") #{file.seeders}
-              td(class="p-[15px] border") #{file.leechers}
+              td(class="p-[15px] border") #{file.seeders.length}
+              td(class="p-[15px] border") #{file.leechers.length}

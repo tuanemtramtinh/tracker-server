@@ -10,6 +10,8 @@ router.post("/find", controller.find);
 
 router.post("/upload", controller.upload);
 
+router.post("/cancel", controller.cancel);
+
 router.post("/online", controller.online);
 
 module.exports = router;

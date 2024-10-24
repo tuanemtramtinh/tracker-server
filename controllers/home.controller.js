@@ -33,8 +33,8 @@ module.exports.uploadPost = async (req, res) => {
       fileName: parsedTorrentFile.name,
       size: parsedTorrentFile.length,
       link: parsedTorrentFile.infoHash,
-      seeders: 0,
-      leechers: 0,
+      seeders: [],
+      leechers: [],
     };
 
     const file = new DownloadFileModel(data);

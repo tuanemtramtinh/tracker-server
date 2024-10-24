@@ -21,8 +21,6 @@ module.exports.index = async (req, res) => {
 
         const address = `${ip}:${port}`;
 
-        console.log(address);
-
         const check = seeders.find((item) => item === address);
 
         if (!check) {
@@ -37,18 +35,12 @@ module.exports.index = async (req, res) => {
             }
           );
 
-          const downloadFile = await DownloadFileModel.findOne({
-            infoHash: info_hash,
-          });
-
-          // console.log(downloadFile);
-
           await DownloadFileModel.updateOne(
             {
               infoHash: info_hash,
             },
             {
-              seeders: downloadFile.seeders + 1,
+              $push: { seeders: address },
             }
           );
         }
@@ -127,14 +119,44 @@ module.exports.upload = async (req, res) => {
     const data = {
       fileName: req.body.fileName,
       size: req.body.size,
-      link: req.body.url,
-      seeders: 1,
-      leechers: 0,
+      link: req.body.link,
+      seeders: [req.body.seeders],
+      leechers: [],
       infoHash: req.body.infoHash,
     };
 
-    const downloadFile = new DownloadFileModel(data);
-    await downloadFile.save();
+    const file = await DownloadFileModel.findOne({
+      infoHash: req.body.infoHash,
+    });
+
+    if (!file) {
+      const downloadFile = new DownloadFileModel(data);
+      await downloadFile.save();
+    }
+
+    res.json("OK");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports.cancel = async (req, res) => {
+  try {
+    const address = req.body.address;
+
+    await FileModel.updateMany(
+      {},
+      {
+        $pull: { seeders: address },
+      }
+    );
+
+    await DownloadFileModel.updateMany(
+      {},
+      {
+        $pull: { seeders: address },
+      }
+    );
 
     res.json("OK");
   } catch (error) {
