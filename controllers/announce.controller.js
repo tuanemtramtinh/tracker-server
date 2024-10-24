@@ -41,7 +41,7 @@ module.exports.index = async (req, res) => {
             infoHash: info_hash,
           });
 
-          console.log(downloadFile);
+          // console.log(downloadFile);
 
           await DownloadFileModel.updateOne(
             {
@@ -117,6 +117,26 @@ module.exports.find = async (req, res) => {
     res.json(file);
 
     // res.json("OK");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports.upload = async (req, res) => {
+  try {
+    const data = {
+      fileName: req.body.fileName,
+      size: req.body.size,
+      link: req.body.url,
+      seeders: 1,
+      leechers: 0,
+      infoHash: req.body.infoHash,
+    };
+
+    const downloadFile = new DownloadFileModel(data);
+    await downloadFile.save();
+
+    res.json("OK");
   } catch (error) {
     console.log(error);
   }
