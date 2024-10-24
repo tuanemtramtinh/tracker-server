@@ -8,4 +8,6 @@ router.post("/infoHashBuffer", controller.infoHashBuffer);
 
 router.post("/find", controller.find);
 
+router.post("/online", controller.online);
+
 module.exports = router;

@@ -1,3 +1,4 @@
+const DownloadFileModel = require("../models/downloadFile.model");
 const FileModel = require("../models/file.model");
 
 module.exports.index = async (req, res) => {
@@ -33,6 +34,21 @@ module.exports.index = async (req, res) => {
             },
             {
               seeders: seeders,
+            }
+          );
+
+          const downloadFile = await DownloadFileModel.findOne({
+            infoHash: info_hash,
+          });
+
+          console.log(downloadFile);
+
+          await DownloadFileModel.updateOne(
+            {
+              infoHash: info_hash,
+            },
+            {
+              seeders: downloadFile.seeders + 1,
             }
           );
         }
@@ -96,7 +112,7 @@ module.exports.find = async (req, res) => {
       infoHash: infoHash,
     });
 
-    console.log(file);
+    // console.log(file);
 
     res.json(file);
 
@@ -105,3 +121,5 @@ module.exports.find = async (req, res) => {
     console.log(error);
   }
 };
+
+module.exports.online = (req, res) => {};
