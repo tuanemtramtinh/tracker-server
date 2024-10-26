@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* alert-message */
+.alert-message {
+  /* display: inline-block; */
+  position: absolute !important;
+}
+/* End alert-message */

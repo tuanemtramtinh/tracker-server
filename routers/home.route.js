@@ -6,6 +6,9 @@ const multer = require("multer");
 const upload = multer();
 
 const uploadMiddleware = require("../middlewares/upload.middleware");
+const authMiddleware = require("../middlewares/auth.middleware");
+
+router.use(authMiddleware.userAuthentication);
 
 router.get("/", controller.index);
 

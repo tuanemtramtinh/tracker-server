@@ -6,7 +6,7 @@ const downloadFileSchema = new mongoose.Schema(
     size: Number,
     link: String,
     seeders: Array,
-    leechers: Array,
+    leechers: Number,
     infoHash: String,
   },
   {

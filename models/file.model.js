@@ -5,7 +5,9 @@ const fileSchema = new mongoose.Schema({
   infoHash: String,
   infoHashBuffer: Buffer,
   seeders: Array,
+  leechers: Number,
   numOfPieces: Number,
+  size: Number,
 });
 
 const FileModel = mongoose.model("file", fileSchema);

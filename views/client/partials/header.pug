@@ -1,6 +1,16 @@
-div(class="") 
-  div(class="wrapper py-[20px] px-[30px] flex text-[24px] justify-between bg-black text-white")
-    h1(claas="") ATSH Tracker
-    ul(class="")
-      li
-        a(href="/home/upload") Upload
+div(class="bg-black") 
+  div(class="container mx-auto")
+    div(class="wrapper py-[20px] flex text-[24px] justify-between  text-white")
+      h1(claas="") 
+        a(href="/home") ATSH Tracker
+      ul(class="flex gap-4")
+        if(!user)
+          li
+          a(href="/user/login") Login
+          li 
+            a(href="/user/register") Register
+        else
+          li
+            a(href="/user/logout") Logout
+          li
+            a(href="/home/upload") Upload

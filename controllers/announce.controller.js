@@ -6,9 +6,10 @@ module.exports.index = async (req, res) => {
     const file_name = req.query.file_name;
     const info_hash = req.query.info_hash;
     const ip = req.query.ip;
+    const size = parseInt(req.query.size);
     const port = req.query.port;
     const left = parseInt(req.query.left);
-    const num_of_pieces = req.query.num_of_pieces;
+    const num_of_pieces = parseInt(req.query.num_of_pieces);
 
     //detect seeder
     if (left === 0) {
@@ -24,7 +25,15 @@ module.exports.index = async (req, res) => {
         const check = seeders.find((item) => item === address);
 
         if (!check) {
+          // console.log(">>>check")
+
           seeders.push(address);
+
+          _io.emit("SERVER_UPDATE_SEEDERS", {
+            infoHash: info_hash,
+            seeders: seeders,
+            size: size,
+          });
 
           await FileModel.updateOne(
             {
@@ -46,11 +55,13 @@ module.exports.index = async (req, res) => {
         }
       } else {
         const address = [`${ip}:${port}`];
+
         const newFile = await FileModel.create({
           fileName: file_name,
           infoHash: info_hash,
           seeders: address,
           numOfPieces: num_of_pieces,
+          size: size,
         });
       }
 
@@ -64,7 +75,7 @@ module.exports.index = async (req, res) => {
         infoHash: info_hash,
       });
 
-      res.json(file.seeders);
+      res.json(file.seeders || []);
     }
   } catch (error) {
     console.log(error);
@@ -120,8 +131,9 @@ module.exports.upload = async (req, res) => {
       fileName: req.body.fileName,
       size: req.body.size,
       link: req.body.link,
+      createdAt: new Date().toString(),
       seeders: [req.body.seeders],
-      leechers: [],
+      leechers: 0,
       infoHash: req.body.infoHash,
     };
 
@@ -130,6 +142,8 @@ module.exports.upload = async (req, res) => {
     });
 
     if (!file) {
+      _io.emit("SERVER_UPDATE_NEW_FILE", data);
+
       const downloadFile = new DownloadFileModel(data);
       await downloadFile.save();
     }
@@ -143,6 +157,25 @@ module.exports.upload = async (req, res) => {
 module.exports.cancel = async (req, res) => {
   try {
     const address = req.body.address;
+
+    const listFileCancel = await FileModel.find({
+      seeders: {
+        $in: [address],
+      },
+    });
+
+    const listFileInfoHash = listFileCancel.map((item) => {
+      const newSeedersList = item.seeders.filter(
+        (seeder) => seeder !== address
+      );
+      return {
+        fileName: item.fileName,
+        infoHash: item.infoHash,
+        seeders: newSeedersList,
+      };
+    });
+
+    _io.emit("SERVER_CANCEL_SEEDERS", listFileInfoHash);
 
     await FileModel.updateMany(
       {},

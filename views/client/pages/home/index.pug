@@ -9,18 +9,18 @@ block main
       +box-head(pageTitle)
 
       div(class="flex justify-center items-center my-[50px]")
-        table(class="table-auto border-collapse border w-[80vw]")
+        table(class="table-auto border-collapse border w-full" file-table)
           tr 
             th(class="p-[15px] border") Name 
             th(class="p-[15px] border") Link 
             th(class="p-[15px] border") Date Uploaded 
+            th(class="p-[15px] border") Size(Bytes)
             th(class="p-[15px] border") Seeders 
-            th(class="p-[15px] border") Leechers
           each file in files
-            tr 
+            tr(file-id=file.infoHash)
               td(class="p-[15px] border") #{file.fileName}
               td(class="p-[15px] border")
                 a(href=file.link class="hover:text-[#4BA3E3]" download=file.fileName) Download
               td(class="p-[15px] border") #{file.createdAt}
-              td(class="p-[15px] border") #{file.seeders.length}
-              td(class="p-[15px] border") #{file.leechers.length}
+              td(class="p-[15px] border") #{file.size}
+              td(class="p-[15px] border" seeders) #{file.seeders.length}

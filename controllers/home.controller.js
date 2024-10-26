@@ -4,6 +4,7 @@ const FileModel = require("../models/file.model");
 
 module.exports.index = async (req, res) => {
   try {
+
     const files = await DownloadFileModel.find({});
 
     res.render("client/pages/home/index", {
@@ -44,6 +45,7 @@ module.exports.uploadPost = async (req, res) => {
       fileName: parsedTorrentFile.name,
       infoHash: parsedTorrentFile.infoHash,
       numOfPieces: parsedTorrentFile.pieces.length,
+      size: parsedTorrentFile.length,
     };
 
     const torrentFileInfo = new FileModel(torrentFileData);

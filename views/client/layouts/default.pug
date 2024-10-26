@@ -4,18 +4,25 @@ html(lang="en")
     meta(charset="UTF-8")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
     title #{pageTitle}
-    link(rel="stylesheet" href="css/style.css")
+    link(rel="stylesheet" href="/css/style.css")
     script(src="https://cdn.tailwindcss.com")
-    script(src="js/tailwind.js") 
+    script(src="/js/tailwind.js") 
   body 
 
     include ../partials/header.pug
 
+    div(class="messages relative")
+
+      - if (messages.success)
+          div(class="alert-message !absoulte top-6 right-6 bg-[#49A34D] text-white text-black p-3 rounded-[20px]" alert-message) #{messages.success}
+
+      - if (messages.error)
+          div(class="alert-message !absoulte top-6 right-6 bg-[#F44336] text-white text-black p-3 rounded-[20px]" alert-message) #{messages.error}
+
     block main
 
-    //- include ../partials/footer.pug
-
-    script(src="js/script.js") 
-
+    <script src="/socket.io/socket.io.js"></script>
+    script(src="/js/socket.io.js")
+    script(src="/js/script.js") 
 
 
